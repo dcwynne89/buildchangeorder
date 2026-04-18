@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>BuildChangeOrder — Free Change Order Generator | Document Scope Changes Instantly</title>
+  <meta name="description" content="Generate professional change order PDFs instantly. Document project scope changes, calculate running contract totals, and get client approval — free, no signup required.">
+  <meta name="keywords" content="change order generator, free change order form, scope change document, change order template, construction change order, freelancer change order, scope creep document">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://buildchangeorder.co/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="styles.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6010936774105671" crossorigin="anonymous"></script>
+  <meta property="og:title" content="BuildChangeOrder — Free Change Order Generator">
+  <meta property="og:description" content="Document scope changes professionally. Running contract totals, dual signatures, instant PDF. Free, no signup.">
+  <meta property="og:url" content="https://buildchangeorder.co/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "BuildChangeOrder",
+    "url": "https://buildchangeorder.co",
+    "description": "Free online change order generator. Document project scope changes with running contract totals and dual approval signatures.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">📋 BuildChangeOrder</a>
+    <div class="navbar-links">
+      <a href="/api/docs">API Docs</a>
+      <a href="/about.html">About</a>
+    </div>
+  </nav>
+
+  <section class="hero-banner">
+    <h1>Free Change Order Generator</h1>
+    <p>Document scope changes professionally. Running contract totals, dual approval signatures, instant PDF — no signup needed.</p>
+  </section>
+
+  <main class="app-container">
+    <!-- ── FORM PANEL ── -->
+    <div class="form-panel" id="formPanel">
+
+      <!-- Your Info -->
+      <div class="form-section">
+        <div class="form-section-header"><h3>📋 Your Information</h3></div>
+        <div class="form-body">
+          <div class="form-row">
+            <div class="form-group"><label for="fromName">Company / Your Name *</label><input type="text" id="fromName" placeholder="Acme Agency"></div>
+            <div class="form-group"><label for="fromEmail">Email</label><input type="email" id="fromEmail" placeholder="hello@acme.com"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label for="fromPhone">Phone</label><input type="tel" id="fromPhone" placeholder="(555) 123-4567"></div>
+            <div class="form-group"><label for="accentColor">Accent Color</label>
+              <div class="color-row"><input type="color" id="accentColor" value="#7C3AED"><input type="text" id="accentColorHex" value="#7C3AED" style="flex:1" readonly></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Info -->
+      <div class="form-section">
+        <div class="form-section-header"><h3>👤 Client / Submitted To</h3></div>
+        <div class="form-body">
+          <div class="form-row">
+            <div class="form-group"><label for="toName">Client Name *</label><input type="text" id="toName" placeholder="Jane Smith"></div>
+            <div class="form-group"><label for="toEmail">Client Email</label><input type="email" id="toEmail" placeholder="jane@client.com"></div>
+          </div>
+          <div class="form-row full">
+            <div class="form-group"><label for="toAddress">Client Address</label><input type="text" id="toAddress" placeholder="456 Oak Ave, Denver, CO 80202"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Order Details -->
+      <div class="form-section">
+        <div class="form-section-header"><h3>📄 Change Order Details</h3></div>
+        <div class="form-body">
+          <div class="form-row">
+            <div class="form-group"><label for="coNumber">Change Order #</label><input type="text" id="coNumber" placeholder="CO-001" value="CO-001"></div>
+            <div class="form-group"><label for="coDate">Date</label><input type="date" id="coDate"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label for="projectName">Project Name</label><input type="text" id="projectName" placeholder="Website Redesign"></div>
+            <div class="form-group"><label for="currency">Currency</label><input type="text" id="currency" placeholder="$" value="$" maxlength="3"></div>
+          </div>
+          <div class="form-row full">
+            <div class="form-group">
+              <label for="reason">Reason for Change</label>
+              <select id="reason">
+                <option value="client_request">Client Request</option>
+                <option value="unforeseen">Unforeseen Conditions</option>
+                <option value="design_revision">Design Revision</option>
+                <option value="error_omission">Error or Omission</option>
+                <option value="owner_initiated">Owner-Initiated</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="form-group"><label for="description">Description of Change</label><textarea id="description" rows="3" placeholder="Describe what is being added, removed, or modified from the original scope of work..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Original Contract -->
+      <div class="form-section">
+        <div class="form-section-header"><h3>📑 Original Contract Reference</h3></div>
+        <div class="form-body">
+          <div class="form-row">
+            <div class="form-group"><label for="contractRef">Contract Reference / Title</label><input type="text" id="contractRef" placeholder="Web Design Agreement"></div>
+            <div class="form-group"><label for="contractDate">Contract Date</label><input type="date" id="contractDate"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label for="originalValue">Original Contract Value ($)</label><input type="number" id="originalValue" placeholder="5000" min="0" step="0.01"></div>
+            <div class="form-group"><label for="previousCOs">Previous Change Orders Total ($)</label><input type="number" id="previousCOs" placeholder="0" min="0" step="0.01" value="0"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Line Items -->
+      <div class="form-section">
+        <div class="form-section-header"><h3>🔧 Scope Change Items</h3></div>
+        <div class="line-items-header"><span>Description</span><span>Qty</span><span>Rate</span><span>Amount</span><span></span></div>
+        <div id="lineItems"></div>
+        <button type="button" class="btn-add-item" id="btnAddItem">+ Add Item</button>
+        <div class="running-total" id="runningTotal">
+          <div class="rt-label">Financial Impact</div>
+          <div class="rt-row"><span>Original Contract</span><span id="rtOriginal">$0.00</span></div>
+          <div class="rt-row" id="rtPrevRow"><span>Previous Change Orders</span><span id="rtPrevCOs">$0.00</span></div>
+          <div class="rt-row"><span>This Change Order</span><span id="rtThisCO">$0.00</span></div>
+          <hr class="rt-divider">
+          <div class="rt-row rt-total"><span>New Contract Total</span><span id="rtNewTotal">$0.00</span></div>
+        </div>
+      </div>
+
+      <!-- Schedule Impact -->
+      <div class="form-section">
+        <div class="form-section-header"><h3>📅 Schedule Impact (Optional)</h3></div>
+        <div class="form-body">
+          <div class="form-row">
+            <div class="form-group"><label for="daysAdded">Days Added (+) / Removed (−)</label><input type="number" id="daysAdded" placeholder="0" value="0" step="1"></div>
+            <div class="form-group"><label for="newCompletionDate">New Completion Date</label><input type="date" id="newCompletionDate"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label for="taxRate">Tax Rate (%)</label><input type="number" id="taxRate" placeholder="0" value="0" min="0" max="100" step="0.01"></div>
+            <div class="form-group"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-section">
+        <div class="form-section-header"><h3>📝 Notes & Terms</h3></div>
+        <div class="form-body">
+          <div class="form-group"><label for="notes">Notes</label><textarea id="notes" rows="2" placeholder="Work on this change order will begin upon signed approval from client."></textarea></div>
+          <div class="form-group"><label for="terms">Terms</label><textarea id="terms" rows="2" placeholder="This change order is subject to all terms of the original contract. Additional payment due within 14 days of completion."></textarea></div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-download" id="btnDownload">⬇ Download Change Order PDF</button>
+
+    </div>
+
+    <!-- ── PREVIEW PANEL ── -->
+    <div class="preview-panel">
+      <div class="preview-header">
+        <h3>📄 Live Preview</h3>
+        <span class="preview-badge">Updates as you type</span>
+      </div>
+      <div class="preview-body" id="previewBody"></div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- SEO Content -->
+  <section style="max-width:860px;margin:3rem auto;padding:0 1.5rem 1rem;">
+    <h2 style="font-size:1.3rem;font-weight:700;color:var(--text-primary);margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0.5rem;">Why Use BuildChangeOrder?</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-bottom:2.5rem;">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">🔢</div>
+        <h3 style="color:var(--text-primary);font-size:0.95rem;font-weight:700;margin-bottom:0.4rem;">Running Contract Total</h3>
+        <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.6;">Every change order shows the original contract, all previous COs, this CO's amount, and the new running total — the feature no template gets right.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">✍️</div>
+        <h3 style="color:var(--text-primary);font-size:0.95rem;font-weight:700;margin-bottom:0.4rem;">Dual Approval Signatures</h3>
+        <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.6;">Client and contractor signature blocks on every document. No verbal agreements — scope changes are legally documented.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">📅</div>
+        <h3 style="color:var(--text-primary);font-size:0.95rem;font-weight:700;margin-bottom:0.4rem;">Schedule Impact</h3>
+        <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.6;">Document exactly how many days are added or removed from the project timeline. No surprises at deadline.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">🔗</div>
+        <h3 style="color:var(--text-primary);font-size:0.95rem;font-weight:700;margin-bottom:0.4rem;">Fits Your Workflow</h3>
+        <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.6;">Start with a quote in <a href="https://buildquotes.co" style="color:var(--accent)">BuildQuotes</a>, convert to invoice in <a href="https://buildinvoice.co" style="color:var(--accent)">BuildInvoice</a>, and document changes here.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div style="max-width:860px;margin:0 auto 1.25rem;padding:0 1.5rem;">
+      <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:0.6rem;">Also from the Build ecosystem</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.75rem;">
+        <a href="https://buildpdf.co" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;font-size:0.8rem;color:var(--text-secondary);text-decoration:none;">📄 <strong style="color:var(--text-primary)">BuildPDF</strong> — Free file-to-PDF converter</a>
+        <a href="https://buildinvoice.co" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;font-size:0.8rem;color:var(--text-secondary);text-decoration:none;">⚡ <strong style="color:var(--text-primary)">BuildInvoice</strong> — Free PDF invoice generator</a>
+        <a href="https://buildquotes.co" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;font-size:0.8rem;color:var(--text-secondary);text-decoration:none;">💼 <strong style="color:var(--text-primary)">BuildQuotes</strong> — Free price quote generator</a>
+        <a href="https://buildcertificates.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;font-size:0.8rem;color:var(--text-secondary);text-decoration:none;">🏅 <strong style="color:var(--text-primary)">BuildCertificates</strong> — Free certificate generator</a>
+      </div>
+    </div>
+    <p>© 2026 BuildChangeOrder · <a href="/api/docs">API Docs</a> · <a href="/about.html">About</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p>
+  </footer>
+
+  <script src="change-order-app.js"></script>
+</body>
+</html>

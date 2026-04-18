@@ -1,0 +1,58 @@
+# ── BuildChangeOrder · netlify.toml ─────────────────────────────────────────
+# Canonical: https://buildchangeorder.co
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  included_files = ["node_modules/pdfmake/**"]
+
+[functions.generate]
+  external_node_modules = ["pdfmake"]
+
+# ── API Route Redirects ───────────────────────────────────────────────────────
+[[redirects]]
+  from   = "/api/v1/generate"
+  to     = "/.netlify/functions/generate"
+  status = 200
+  force  = true
+
+[[redirects]]
+  from   = "/api/v1/usage"
+  to     = "/.netlify/functions/usage"
+  status = 200
+  force  = true
+
+[[redirects]]
+  from   = "/api/v1/register"
+  to     = "/.netlify/functions/register"
+  status = 200
+  force  = true
+
+[[redirects]]
+  from   = "/api/v1/health"
+  to     = "/.netlify/functions/health"
+  status = 200
+  force  = true
+
+[[redirects]]
+  from   = "/api/docs"
+  to     = "/api-docs.html"
+  status = 200
+  force  = true
+
+# ── Security Headers ──────────────────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    Permissions-Policy     = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://pagead2.googlesyndication.com; connect-src 'self' https://pagead2.googlesyndication.com https://adtrafficquality.google; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com"
+
+[[headers]]
+  for = "/api/v1/*"
+  [headers.values]
+    Access-Control-Allow-Origin  = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, X-API-Key, Authorization"

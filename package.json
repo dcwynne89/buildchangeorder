@@ -1,0 +1,12 @@
+{
+  "name": "buildchangeorder",
+  "version": "1.0.0",
+  "description": "Free change order generator — BuildChangeOrder.co",
+  "private": true,
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}
