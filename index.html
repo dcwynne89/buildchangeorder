@@ -166,7 +166,11 @@
         </div>
       </div>
 
-      <button type="button" class="btn-download" id="btnDownload">⬇ Download Change Order PDF</button>
+      <div style="display:flex;gap:0.75rem;">
+        <button type="button" class="btn-download" id="btnDownload" style="flex:1;">⬇ Download Change Order PDF</button>
+        <button type="button" id="btnImportQuote" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem 1.25rem;font-size:0.875rem;font-weight:600;font-family:inherit;color:var(--text-secondary);cursor:pointer;transition:all 0.2s;white-space:nowrap;" title="Import a .buildquote file exported from BuildQuotes">📥 Import from BuildQuotes</button>
+        <input type="file" id="importQuoteInput" accept=".buildquote,.json" style="display:none;">
+      </div>
 
     </div>
 

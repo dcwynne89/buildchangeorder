@@ -39,6 +39,8 @@ function bindEvents() {
   $("accentColor").addEventListener("input", (e) => { accentColor = e.target.value; $("accentColorHex").value = e.target.value; updatePreview(); });
   $("btnAddItem").addEventListener("click", () => { lineItems.push({ description: "", quantity: 1, rate: 0 }); renderLineItems(); updateRunningTotal(); updatePreview(); });
   $("btnDownload").addEventListener("click", downloadCO);
+  $("btnImportQuote").addEventListener("click", () => $("importQuoteInput").click());
+  $("importQuoteInput").addEventListener("change", (e) => { if (e.target.files[0]) importFromBuildQuote(e.target.files[0]); e.target.value = ""; });
   document.querySelectorAll("input, textarea, select").forEach((el) => {
     el.addEventListener("input", () => { updateRunningTotal(); updatePreview(); });
   });
@@ -257,6 +259,66 @@ async function downloadCO() {
   } finally {
     isGenerating = false; btn.disabled = false; btn.textContent = "⬇ Download Change Order PDF";
   }
+}
+
+// ── Import from BuildQuotes ───────────────────────────────────
+function importFromBuildQuote(file) {
+  if (file.name.endsWith(".pdf")) {
+    showToast("Can't import PDFs. In BuildQuotes, click 'Export for BuildInvoice' to get a .buildquote file.", "error");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const json = JSON.parse(e.target.result);
+      if (json.type !== "buildquote") { showToast("Not a valid .buildquote file.", "error"); return; }
+      const d = json.data || {};
+
+      // Pre-fill Your Info
+      if (d.company)      $("fromName").value  = d.company;
+      if (d.email)        $("fromEmail").value = d.email;
+      if (d.phone)        $("fromPhone").value = d.phone;
+
+      // Pre-fill Client Info
+      if (d.client_name)  $("toName").value    = d.client_name;
+      if (d.client_email) $("toEmail").value   = d.client_email;
+
+      // Project name from quote
+      if (d.project_name) $("projectName").value = d.project_name;
+
+      // Set CO number from quote number  (Q-001 → CO-001)
+      if (d.quote_number) $("coNumber").value = d.quote_number.replace(/^Q(?:TE)?-?/i, "CO-");
+
+      // Import line items
+      if (Array.isArray(d.line_items) && d.line_items.length) {
+        lineItems = d.line_items.map(li => ({
+          description: li.description || "",
+          quantity:    parseFloat(li.quantity) || 1,
+          rate:        parseFloat(li.rate)     || 0,
+        }));
+        renderLineItems();
+      }
+
+      // Tax rate
+      if (d.tax_rate != null) $("taxRate").value = d.tax_rate;
+
+      // Set original contract value = quote total (subtotal+tax) — user can adjust
+      const sub  = (d.subtotal || 0);
+      const tax  = sub * ((d.tax_rate || 0) / 100);
+      $("originalValue").value = (sub + tax).toFixed(2);
+
+      // Notes/Terms
+      if (d.notes)  $("notes").value  = d.notes;
+      if (d.terms)  $("terms").value  = d.terms;
+
+      updateRunningTotal();
+      updatePreview();
+      showToast("✓ Quote imported! Review and adjust values before downloading.", "success");
+    } catch {
+      showToast("Could not read file. Make sure it's a valid .buildquote file.", "error");
+    }
+  };
+  reader.readAsText(file);
 }
 
 // ── Helpers ───────────────────────────────────────────────────
