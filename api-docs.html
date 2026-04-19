@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>BuildChangeOrder API Docs — Change Order PDF Generator API</title>
+  <meta name="description" content="Full API documentation for BuildChangeOrder. Generate change order PDFs programmatically with running contract totals, schedule impact tracking, and dual signatures.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://buildchangeorder.co/api-docs.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="styles.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6010936774105671" crossorigin="anonymous"></script>
+  <style>
+    /* ── Docs-specific layout ── */
+    .docs-layout { display: grid; grid-template-columns: 240px 1fr; gap: 0; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .docs-sidebar { position: sticky; top: 80px; align-self: start; padding-right: 1.5rem; border-right: 1px solid var(--border); }
+    .docs-sidebar h4 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin: 1.25rem 0 0.5rem; }
+    .docs-sidebar a { display: block; font-size: 0.82rem; color: var(--text-secondary); text-decoration: none; padding: 0.3rem 0; transition: color 0.15s; }
+    .docs-sidebar a:hover, .docs-sidebar a.active { color: var(--accent); }
+    .docs-content { padding-left: 2.5rem; }
+    .docs-content h2 { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 2.5rem 0 0.75rem; padding-top: 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .docs-content h2:first-child { margin-top: 0; }
+    .docs-content h3 { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 1.5rem 0 0.5rem; }
+    .docs-content p { color: var(--text-secondary); line-height: 1.7; margin-bottom: 0.75rem; font-size: 0.9rem; }
+    .docs-content ul { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8; padding-left: 1.25rem; margin-bottom: 0.75rem; }
+
+    /* Endpoint badge */
+    .endpoint-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 2rem; overflow: hidden; }
+    .endpoint-header { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+    .method { font-size: 0.75rem; font-weight: 800; padding: 0.25rem 0.6rem; border-radius: 4px; }
+    .method.post { background: #1a4731; color: #4ade80; }
+    .method.get  { background: #1e3a5f; color: #60a5fa; }
+    .endpoint-path { font-family: monospace; font-size: 0.95rem; color: var(--text-primary); font-weight: 600; }
+    .endpoint-desc { margin-left: auto; font-size: 0.8rem; color: var(--text-secondary); }
+    .endpoint-body { padding: 1.25rem; }
+
+    /* Code blocks */
+    pre { background: #0d0d0d; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; overflow-x: auto; margin: 0.75rem 0; }
+    code { font-family: 'Fira Code', 'Courier New', monospace; font-size: 0.82rem; color: #e2e8f0; }
+    .inline-code { background: rgba(255,255,255,0.07); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.82rem; color: var(--accent); }
+
+    /* Param table */
+    .param-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 0.75rem 0; }
+    .param-table th { text-align: left; padding: 0.5rem 0.75rem; background: rgba(255,255,255,0.04); color: var(--text-secondary); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-secondary); vertical-align: top; }
+    .param-table td:first-child { font-family: monospace; color: var(--text-primary); }
+    .required { color: #f87171; font-size: 0.7rem; font-weight: 700; }
+    .optional { color: #6b7280; font-size: 0.7rem; }
+
+    /* Alert boxes */
+    .alert { border-radius: 8px; padding: 0.85rem 1rem; margin: 0.75rem 0; font-size: 0.85rem; line-height: 1.6; }
+    .alert-info { background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.25); color: #93c5fd; }
+    .alert-warn { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.25); color: #fcd34d; }
+
+    /* Tab switcher for code examples */
+    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+    .tab-btn { padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* Plans */
+    .plans-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 1rem; margin: 1rem 0; }
+    .plan-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+    .plan-card.popular { border-color: var(--accent); }
+    .plan-name { font-weight: 800; font-size: 0.9rem; color: var(--text-primary); }
+    .plan-price { font-size: 1.4rem; font-weight: 800; color: var(--accent); margin: 0.25rem 0; }
+    .plan-price span { font-size: 0.75rem; color: var(--text-secondary); font-weight: 400; }
+    .plan-features { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.8; }
+
+    @media (max-width: 720px) {
+      .docs-layout { grid-template-columns: 1fr; }
+      .docs-sidebar { display: none; }
+      .docs-content { padding-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">📋 BuildChangeOrder</a>
+    <div class="navbar-links">
+      <a href="/api/docs" style="color:var(--accent);">API Docs</a>
+      <a href="/about.html">About</a>
+    </div>
+  </nav>
+
+  <div style="max-width:1100px;margin:0 auto;padding:1.5rem 1.5rem 0;">
+    <h1 style="font-size:1.9rem;font-weight:800;color:var(--text-primary);margin-bottom:0.25rem;">BuildChangeOrder API</h1>
+    <p style="color:var(--text-secondary);font-size:0.95rem;margin-bottom:1rem;">Generate professional change order PDFs programmatically. Running contract totals, schedule impact, dual signatures.</p>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1rem;">
+      <span style="background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:#a78bfa;padding:0.25rem 0.75rem;border-radius:99px;font-size:0.78rem;font-weight:600;">v1.0.0</span>
+      <span style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);color:#4ade80;padding:0.25rem 0.75rem;border-radius:99px;font-size:0.78rem;font-weight:600;">● Live</span>
+      <code class="inline-code">https://buildchangeorder.co/api/v1</code>
+    </div>
+  </div>
+
+  <div class="docs-layout">
+
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+      <h4>Getting Started</h4>
+      <a href="#overview">Overview</a>
+      <a href="#authentication">Authentication</a>
+      <a href="#errors">Errors</a>
+      <a href="#rate-limits">Rate Limits</a>
+      <h4>Endpoints</h4>
+      <a href="#register">POST /register</a>
+      <a href="#generate">POST /generate</a>
+      <a href="#usage">GET /usage</a>
+      <a href="#health">GET /health</a>
+      <h4>Reference</h4>
+      <a href="#plans">Plans & Pricing</a>
+      <a href="#changelog">Changelog</a>
+    </aside>
+
+    <!-- Main content -->
+    <main class="docs-content">
+
+      <!-- Overview -->
+      <section id="overview">
+        <h2>Overview</h2>
+        <p>The BuildChangeOrder API generates professional change order PDFs via HTTP. It handles all layout, financial calculations, and document assembly — you provide the data, we return a base64-encoded PDF.</p>
+
+        <h3>What's unique</h3>
+        <ul>
+          <li><strong>Running contract total</strong> — Original Contract + Previous COs + This CO = New Contract Total, calculated and rendered automatically</li>
+          <li><strong>Schedule impact tracking</strong> — Days added/removed and new completion date displayed as a warning banner</li>
+          <li><strong>Dual signature blocks</strong> — Client approval and contractor authorization lines on every document</li>
+          <li><strong>Reason classification</strong> — Client Request, Unforeseen Conditions, Design Revision, Error or Omission, Owner-Initiated, Other</li>
+        </ul>
+
+        <h3>Base URL</h3>
+        <pre><code>https://buildchangeorder.co/api/v1</code></pre>
+
+        <h3>Also available on RapidAPI</h3>
+        <p>The BuildChangeOrder API is listed on the <a href="https://rapidapi.com" style="color:var(--accent);">RapidAPI marketplace</a> for easy subscription management and unified billing alongside your other APIs.</p>
+      </section>
+
+      <!-- Authentication -->
+      <section id="authentication">
+        <h2>Authentication</h2>
+        <p>All requests to protected endpoints require an API key passed in the <span class="inline-code">X-API-Key</span> header.</p>
+        <pre><code>X-API-Key: bco_your_api_key_here</code></pre>
+
+        <div class="alert alert-info">
+          🔑 Get an API key instantly — no credit card required — via <a href="#register" style="color:#93c5fd;"><code>POST /register</code></a>.
+        </div>
+
+        <h3>Key format</h3>
+        <p>All BuildChangeOrder API keys are prefixed with <span class="inline-code">bco_</span> followed by 32 alphanumeric characters. Keys are shown only once at registration — store them securely.</p>
+      </section>
+
+      <!-- Errors -->
+      <section id="errors">
+        <h2>Errors</h2>
+        <p>The API returns standard HTTP status codes. Error bodies are JSON with a <span class="inline-code">message</span> field.</p>
+        <table class="param-table">
+          <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>200</td><td>Success</td></tr>
+            <tr><td>201</td><td>Created (registration)</td></tr>
+            <tr><td>400</td><td>Bad request — missing or invalid fields</td></tr>
+            <tr><td>401</td><td>Missing or invalid API key</td></tr>
+            <tr><td>429</td><td>Rate limit or monthly quota exceeded</td></tr>
+            <tr><td>500</td><td>Internal server error</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Error body</h3>
+        <pre><code>{
+  "success": false,
+  "error": "Human-readable error message",
+  "docs": "https://buildchangeorder.co/api/docs"
+}</code></pre>
+      </section>
+
+      <!-- Rate Limits -->
+      <section id="rate-limits">
+        <h2>Rate Limits</h2>
+        <table class="param-table">
+          <thead><tr><th>Plan</th><th>Requests/second</th><th>Monthly quota</th></tr></thead>
+          <tbody>
+            <tr><td>Free</td><td>1 req/s</td><td>25 change orders</td></tr>
+            <tr><td>Pro</td><td>5 req/s</td><td>200 change orders</td></tr>
+            <tr><td>Business</td><td>10 req/s</td><td>1,000 change orders</td></tr>
+          </tbody>
+        </table>
+        <p>When you exceed the monthly quota, <span class="inline-code">/generate</span> returns <span class="inline-code">429</span> with a message explaining the limit. Usage resets on the 1st of each calendar month.</p>
+      </section>
+
+      <!-- POST /register -->
+      <section id="register">
+        <h2>POST /register</h2>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/register</span>
+            <span class="endpoint-desc">No authentication required</span>
+          </div>
+          <div class="endpoint-body">
+            <p>Creates a new API key linked to the provided email address. Each email can register once. Rate-limited to 5 registrations per IP per hour.</p>
+
+            <h3>Request body</h3>
+            <table class="param-table">
+              <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td>email</td><td>string</td><td><span class="required">required</span></td><td>Your email address. Used to link to your account.</td></tr>
+              </tbody>
+            </table>
+
+            <h3>Example request</h3>
+            <pre><code>curl -X POST https://buildchangeorder.co/api/v1/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "you@example.com"}'</code></pre>
+
+            <h3>Example response — 201 Created</h3>
+            <pre><code>{
+  "success": true,
+  "api_key": "bco_Mk7aq2D2jUEqLlOwHANpGhU8ZaI6l8Sx",
+  "tier": "free",
+  "quota": {
+    "change_orders_per_month": 25
+  },
+  "message": "Save your API key — it won't be shown again.",
+  "docs": "https://buildchangeorder.co/api/docs"
+}</code></pre>
+
+            <div class="alert alert-warn">⚠️ The API key is shown only once. Copy and store it immediately.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- POST /generate -->
+      <section id="generate">
+        <h2>POST /generate</h2>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/v1/generate</span>
+            <span class="endpoint-desc">Requires X-API-Key</span>
+          </div>
+          <div class="endpoint-body">
+            <p>Generates a change order PDF and returns it as a base64-encoded string. Decrements your monthly quota by 1.</p>
+
+            <h3>Request body</h3>
+            <table class="param-table">
+              <thead><tr><th>Field</th><th>Type</th><th></th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td>from.name</td><td>string</td><td><span class="required">required</span></td><td>Contractor / agency name</td></tr>
+                <tr><td>from.email</td><td>string</td><td><span class="optional">optional</span></td><td>Contractor email</td></tr>
+                <tr><td>from.phone</td><td>string</td><td><span class="optional">optional</span></td><td>Contractor phone</td></tr>
+                <tr><td>to.name</td><td>string</td><td><span class="required">required</span></td><td>Client name</td></tr>
+                <tr><td>to.email</td><td>string</td><td><span class="optional">optional</span></td><td>Client email</td></tr>
+                <tr><td>to.address</td><td>string</td><td><span class="optional">optional</span></td><td>Client address</td></tr>
+                <tr><td>change_order.number</td><td>string</td><td><span class="required">required</span></td><td>Change order number (e.g. <code>CO-001</code>)</td></tr>
+                <tr><td>change_order.date</td><td>string</td><td><span class="required">required</span></td><td>ISO 8601 date (e.g. <code>2026-04-19</code>)</td></tr>
+                <tr><td>change_order.project</td><td>string</td><td><span class="optional">optional</span></td><td>Project name</td></tr>
+                <tr><td>original_contract.value</td><td>number</td><td><span class="required">required</span></td><td>Original contract dollar amount</td></tr>
+                <tr><td>original_contract.previous_change_orders</td><td>number</td><td><span class="optional">optional</span></td><td>Total of all prior approved COs (default: 0)</td></tr>
+                <tr><td>original_contract.reference</td><td>string</td><td><span class="optional">optional</span></td><td>Contract title or reference number</td></tr>
+                <tr><td>original_contract.date</td><td>string</td><td><span class="optional">optional</span></td><td>Original contract date</td></tr>
+                <tr><td>items</td><td>array</td><td><span class="required">required</span></td><td>Array of scope change line items (see below)</td></tr>
+                <tr><td>items[].description</td><td>string</td><td><span class="required">required</span></td><td>Item description</td></tr>
+                <tr><td>items[].quantity</td><td>number</td><td><span class="optional">optional</span></td><td>Quantity (default: 1)</td></tr>
+                <tr><td>items[].rate</td><td>number</td><td><span class="required">required</span></td><td>Unit price</td></tr>
+                <tr><td>reason</td><td>string</td><td><span class="optional">optional</span></td><td>One of: <code>client_request</code>, <code>unforeseen</code>, <code>design_revision</code>, <code>error_omission</code>, <code>owner_initiated</code>, <code>other</code></td></tr>
+                <tr><td>description</td><td>string</td><td><span class="optional">optional</span></td><td>Narrative description of the scope change</td></tr>
+                <tr><td>impact.days_added</td><td>integer</td><td><span class="optional">optional</span></td><td>Days added (+) or removed (−) from timeline</td></tr>
+                <tr><td>impact.new_completion_date</td><td>string</td><td><span class="optional">optional</span></td><td>Revised completion date (ISO 8601)</td></tr>
+                <tr><td>tax_rate</td><td>number</td><td><span class="optional">optional</span></td><td>Tax percentage (e.g. <code>8.5</code>). Default: 0</td></tr>
+                <tr><td>notes</td><td>string</td><td><span class="optional">optional</span></td><td>Additional notes shown on document</td></tr>
+                <tr><td>terms</td><td>string</td><td><span class="optional">optional</span></td><td>Payment / legal terms</td></tr>
+                <tr><td>options.color</td><td>string</td><td><span class="optional">optional</span></td><td>Hex accent color (default: <code>#7C3AED</code>)</td></tr>
+                <tr><td>options.currency_symbol</td><td>string</td><td><span class="optional">optional</span></td><td>Currency symbol (default: <code>$</code>)</td></tr>
+              </tbody>
+            </table>
+
+            <h3>Example request</h3>
+
+            <div class="tabs" id="generateTabs">
+              <button class="tab-btn active" onclick="switchTab('generateTabs','curl')">cURL</button>
+              <button class="tab-btn" onclick="switchTab('generateTabs','js')">JavaScript</button>
+              <button class="tab-btn" onclick="switchTab('generateTabs','python')">Python</button>
+            </div>
+
+            <div id="generateTabs-curl" class="tab-pane active">
+<pre><code>curl -X POST https://buildchangeorder.co/api/v1/generate \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: bco_your_key_here" \
+  -d '{
+    "from": { "name": "Acme Agency", "email": "hello@acme.com" },
+    "to":   { "name": "BigCo Corp",  "email": "client@bigco.com" },
+    "change_order": {
+      "number":  "CO-002",
+      "date":    "2026-04-19",
+      "project": "Website Redesign"
+    },
+    "original_contract": {
+      "reference":              "Web Design Agreement",
+      "date":                   "2026-03-01",
+      "value":                  5000,
+      "previous_change_orders": 500
+    },
+    "items": [
+      { "description": "E-commerce checkout integration", "quantity": 1, "rate": 2500 },
+      { "description": "Payment gateway setup",           "quantity": 1, "rate": 350  }
+    ],
+    "reason":      "client_request",
+    "description": "Client requested a full e-commerce checkout flow outside original scope.",
+    "impact": {
+      "days_added":          10,
+      "new_completion_date": "2026-05-25"
+    },
+    "tax_rate": 8.5,
+    "notes":    "Work begins upon signed approval.",
+    "terms":    "Payment due within 14 days of completion.",
+    "options":  { "color": "#7C3AED" }
+  }'</code></pre>
+            </div>
+
+            <div id="generateTabs-js" class="tab-pane">
+<pre><code>const response = await fetch("https://buildchangeorder.co/api/v1/generate", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key":    "bco_your_key_here"
+  },
+  body: JSON.stringify({
+    from: { name: "Acme Agency", email: "hello@acme.com" },
+    to:   { name: "BigCo Corp",  email: "client@bigco.com" },
+    change_order: { number: "CO-002", date: "2026-04-19", project: "Website Redesign" },
+    original_contract: { value: 5000, previous_change_orders: 500 },
+    items: [
+      { description: "E-commerce checkout", quantity: 1, rate: 2500 }
+    ],
+    reason: "client_request",
+    impact: { days_added: 10, new_completion_date: "2026-05-25" },
+    tax_rate: 8.5
+  })
+});
+
+const data = await response.json();
+
+// Decode and save PDF
+const bytes  = atob(data.pdf);
+const arr    = new Uint8Array(bytes.length);
+for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+const blob   = new Blob([arr], { type: "application/pdf" });
+const url    = URL.createObjectURL(blob);
+const link   = document.createElement("a");
+link.href    = url;
+link.download = "CO-002.pdf";
+link.click();</code></pre>
+            </div>
+
+            <div id="generateTabs-python" class="tab-pane">
+<pre><code>import requests, base64
+
+resp = requests.post(
+    "https://buildchangeorder.co/api/v1/generate",
+    headers={"X-API-Key": "bco_your_key_here"},
+    json={
+        "from": {"name": "Acme Agency", "email": "hello@acme.com"},
+        "to":   {"name": "BigCo Corp"},
+        "change_order": {"number": "CO-002", "date": "2026-04-19"},
+        "original_contract": {"value": 5000, "previous_change_orders": 500},
+        "items": [{"description": "E-commerce checkout", "quantity": 1, "rate": 2500}],
+        "reason": "client_request",
+        "impact": {"days_added": 10},
+        "tax_rate": 8.5,
+    }
+)
+
+data = resp.json()
+with open("CO-002.pdf", "wb") as f:
+    f.write(base64.b64decode(data["pdf"]))
+
+print(f"New contract total: ${data['totals']['new_contract_total']}")</code></pre>
+            </div>
+
+            <h3>Response — 200 OK</h3>
+            <pre><code>{
+  "success": true,
+  "co_number": "CO-002",
+  "pdf": "&lt;base64-encoded PDF string&gt;",
+  "size_bytes": 26800,
+  "watermark": false,
+  "totals": {
+    "original_contract":      5000,
+    "previous_change_orders": 500,
+    "this_change_order":      3093.75,
+    "new_contract_total":     8593.75
+  },
+  "usage": {
+    "used":      2,
+    "limit":     25,
+    "remaining": 23
+  }
+}</code></pre>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- GET /usage -->
+      <section id="usage">
+        <h2>GET /usage</h2>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/usage</span>
+            <span class="endpoint-desc">Requires X-API-Key</span>
+          </div>
+          <div class="endpoint-body">
+            <p>Returns the current usage statistics for your API key — how many change orders have been generated this month, your limit, and remaining quota.</p>
+
+            <h3>Example request</h3>
+            <pre><code>curl https://buildchangeorder.co/api/v1/usage \
+  -H "X-API-Key: bco_your_key_here"</code></pre>
+
+            <h3>Response — 200 OK</h3>
+            <pre><code>{
+  "success": true,
+  "tier": "free",
+  "usage": {
+    "used":      2,
+    "limit":     25,
+    "remaining": 23
+  },
+  "features": {
+    "watermark": true,
+    "logo":      false
+  }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- GET /health -->
+      <section id="health">
+        <h2>GET /health</h2>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/v1/health</span>
+            <span class="endpoint-desc">No authentication required</span>
+          </div>
+          <div class="endpoint-body">
+            <p>Returns the current operational status of the API. Use this for uptime monitoring.</p>
+
+            <h3>Example request</h3>
+            <pre><code>curl https://buildchangeorder.co/api/v1/health</code></pre>
+
+            <h3>Response — 200 OK</h3>
+            <pre><code>{
+  "status":    "ok",
+  "service":   "BuildChangeOrder API",
+  "version":   "1.0.0",
+  "timestamp": "2026-04-19T16:00:00.000Z"
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Plans -->
+      <section id="plans">
+        <h2>Plans & Pricing</h2>
+        <div class="plans-grid">
+          <div class="plan-card">
+            <div class="plan-name">Free</div>
+            <div class="plan-price">$0<span>/month</span></div>
+            <div class="plan-features">
+              25 change orders/month<br>
+              Watermark on PDF<br>
+              1 req/s rate limit<br>
+              REST API access
+            </div>
+          </div>
+          <div class="plan-card popular">
+            <div class="plan-name">Pro ⭐</div>
+            <div class="plan-price">$9<span>/month</span></div>
+            <div class="plan-features">
+              200 change orders/month<br>
+              No watermark<br>
+              Custom logo on PDF<br>
+              5 req/s rate limit
+            </div>
+          </div>
+          <div class="plan-card">
+            <div class="plan-name">Business</div>
+            <div class="plan-price">$29<span>/month</span></div>
+            <div class="plan-features">
+              1,000 change orders/month<br>
+              No watermark<br>
+              Custom logo on PDF<br>
+              10 req/s rate limit
+            </div>
+          </div>
+        </div>
+        <p>Upgrade via the <a href="https://rapidapi.com" style="color:var(--accent);">RapidAPI marketplace</a>. Subscriptions are billed monthly and cancel anytime.</p>
+      </section>
+
+      <!-- Changelog -->
+      <section id="changelog">
+        <h2>Changelog</h2>
+        <h3>v1.0.0 — April 2026</h3>
+        <ul>
+          <li>Initial release</li>
+          <li><code>POST /generate</code> — Change order PDF with running contract totals</li>
+          <li><code>POST /register</code> — Instant API key generation</li>
+          <li><code>GET /usage</code> — Monthly quota tracking</li>
+          <li><code>GET /health</code> — Uptime monitoring endpoint</li>
+          <li>Reason classification: 6 categories</li>
+          <li>Schedule impact tracking (days added/removed)</li>
+          <li>Dual client + contractor signature blocks</li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="site-footer" style="margin-top:3rem;">
+    <div style="max-width:860px;margin:0 auto 1.25rem;padding:0 1.5rem;">
+      <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:0.6rem;">Also from the Build ecosystem</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.75rem;">
+        <a href="https://buildpdf.co" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;font-size:0.8rem;color:var(--text-secondary);text-decoration:none;">📄 <strong style="color:var(--text-primary)">BuildPDF</strong> — Free file-to-PDF converter</a>
+        <a href="https://buildinvoice.co" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;font-size:0.8rem;color:var(--text-secondary);text-decoration:none;">⚡ <strong style="color:var(--text-primary)">BuildInvoice</strong> — Free PDF invoice generator</a>
+        <a href="https://buildquotes.co" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;font-size:0.8rem;color:var(--text-secondary);text-decoration:none;">💼 <strong style="color:var(--text-primary)">BuildQuotes</strong> — Free price quote generator</a>
+        <a href="https://buildcertificates.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.85rem;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;font-size:0.8rem;color:var(--text-secondary);text-decoration:none;">🏅 <strong style="color:var(--text-primary)">BuildCertificates</strong> — Free certificate generator</a>
+      </div>
+    </div>
+    <p>© 2026 BuildChangeOrder · <a href="/">Home</a> · <a href="/about.html">About</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></p>
+  </footer>
+
+  <script>
+    function switchTab(groupId, tabId) {
+      const group = document.getElementById(groupId);
+      group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll(`[id^="${groupId}-"]`).forEach(p => p.classList.remove('active'));
+      document.getElementById(`${groupId}-${tabId}`).classList.add('active');
+    }
+  </script>
+</body>
+</html>
