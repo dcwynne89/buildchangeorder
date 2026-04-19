@@ -9,6 +9,25 @@
 [functions.generate]
   external_node_modules = ["pdfmake"]
 
+# ── Bot Blocking ──────────────────────────────────────────────────────────────
+[[redirects]]
+  from   = "/wp-admin/*"
+  to     = "/"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/wordpress/*"
+  to     = "/"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/.env"
+  to     = "/"
+  status = 301
+  force  = true
+
 # ── API Route Redirects ───────────────────────────────────────────────────────
 [[redirects]]
   from   = "/api/v1/generate"
