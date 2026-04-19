@@ -5,6 +5,14 @@
 
 const { getStore } = require("@netlify/blobs");
 
+// Explicitly pass credentials so bundled @netlify/blobs finds them
+function store(name) {
+  const siteID = process.env.NETLIFY_SITE_ID;
+  const token  = process.env.NETLIFY_AUTH_TOKEN;
+  if (siteID && token) return getStore({ name, siteID, token });
+  return getStore(name);
+}
+
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin":  "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -57,9 +65,9 @@ async function authenticate(event, { countUsage = false } = {}) {
     };
   }
 
-  const hash = simpleHash(apiKey);
-  const store = getStore("bco-keys");
-  const record = await store.get(hash, { type: "json" }).catch(() => null);
+  const hash  = simpleHash(apiKey);
+  const keyStore = store("bco-keys");
+  const record = await keyStore.get(hash, { type: "json" }).catch(() => null);
 
   if (!record) {
     return { auth: null, response: errorResponse(401, "API key not found.", { docs: "https://buildchangeorder.co/api/docs" }) };

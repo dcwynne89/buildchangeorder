@@ -1,10 +1,20 @@
 /* ============================================================
    storage.js — Netlify Blobs abstraction for BuildChangeOrder
+   Explicitly passes siteID + token so bundled @netlify/blobs
+   can find credentials from env vars.
    ============================================================ */
 
 const { getStore } = require("@netlify/blobs");
 
 const MAX_BODY_BYTES = 512 * 1024; // 512 KB
+
+// Wrapper: explicitly passes credentials when available
+function store(name) {
+  const siteID = process.env.NETLIFY_SITE_ID;
+  const token  = process.env.NETLIFY_AUTH_TOKEN;
+  if (siteID && token) return getStore({ name, siteID, token });
+  return getStore(name);
+}
 
 function simpleHash(str) {
   let h = 0;
@@ -22,36 +32,35 @@ function generateKey() {
 }
 
 async function registerKey(email) {
-  const apiKey = generateKey();
-  const hash   = simpleHash(apiKey);
-  const store  = getStore("bco-keys");
+  const apiKey   = generateKey();
+  const hash     = simpleHash(apiKey);
+  const keyStore = store("bco-keys");
 
-  await store.setJSON(hash, {
+  await keyStore.setJSON(hash, {
     email,
     tier:       "free",
     created_at: new Date().toISOString(),
     usage:      {},
   });
 
-  // Email → hash index for duplicate detection
-  const emailStore = getStore("bco-emails");
+  const emailStore = store("bco-emails");
   await emailStore.setJSON(simpleHash(email), { hash, created_at: new Date().toISOString() });
 
   return { apiKey };
 }
 
 async function emailHasKey(email) {
-  const emailStore = getStore("bco-emails");
+  const emailStore = store("bco-emails");
   const record = await emailStore.get(simpleHash(email), { type: "json" }).catch(() => null);
   return !!record;
 }
 
 async function checkRegistrationLimit(ip) {
-  const store  = getStore("bco-reg-limits");
-  const key    = `ip_${simpleHash(ip)}`;
-  const record = await store.get(key, { type: "json" }).catch(() => null);
-  const now    = Date.now();
-  const hour   = 3600 * 1000;
+  const limStore = store("bco-reg-limits");
+  const key      = `ip_${simpleHash(ip)}`;
+  const record   = await limStore.get(key, { type: "json" }).catch(() => null);
+  const now      = Date.now();
+  const hour     = 3600 * 1000;
 
   if (!record) return { allowed: true };
   if (now - record.firstAttempt > hour) return { allowed: true };
@@ -60,31 +69,31 @@ async function checkRegistrationLimit(ip) {
 }
 
 async function recordRegistrationAttempt(ip) {
-  const store  = getStore("bco-reg-limits");
-  const key    = `ip_${simpleHash(ip)}`;
-  const record = await store.get(key, { type: "json" }).catch(() => null);
-  const now    = Date.now();
+  const limStore = store("bco-reg-limits");
+  const key      = `ip_${simpleHash(ip)}`;
+  const record   = await limStore.get(key, { type: "json" }).catch(() => null);
+  const now      = Date.now();
 
   if (!record || now - record.firstAttempt > 3600 * 1000) {
-    await store.setJSON(key, { count: 1, firstAttempt: now });
+    await limStore.setJSON(key, { count: 1, firstAttempt: now });
   } else {
-    await store.setJSON(key, { ...record, count: record.count + 1 });
+    await limStore.setJSON(key, { ...record, count: record.count + 1 });
   }
 }
 
 async function incrementUsage(hash) {
-  const store  = getStore("bco-keys");
-  const record = await store.get(hash, { type: "json" }).catch(() => null);
+  const keyStore = store("bco-keys");
+  const record   = await keyStore.get(hash, { type: "json" }).catch(() => null);
   if (!record) return;
   const month = new Date().toISOString().slice(0, 7);
   const usage = record.usage || {};
   usage[month] = (usage[month] || 0) + 1;
-  await store.setJSON(hash, { ...record, usage });
+  await keyStore.setJSON(hash, { ...record, usage });
 }
 
 async function getUsage(hash) {
-  const store  = getStore("bco-keys");
-  const record = await store.get(hash, { type: "json" }).catch(() => null);
+  const keyStore = store("bco-keys");
+  const record   = await keyStore.get(hash, { type: "json" }).catch(() => null);
   if (!record) return 0;
   const month = new Date().toISOString().slice(0, 7);
   return record.usage?.[month] || 0;
