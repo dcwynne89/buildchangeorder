@@ -7,7 +7,8 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6010936774105671" crossorigin="anonymous"></script>
 </head>
 <body>
-  <nav class="navbar"><a href="/" class="navbar-brand">📋 BuildChangeOrder</a><div class="navbar-links"><a href="/about.html">About</a></div></nav>
+  <nav class="navbar"><a href="/" class="navbar-brand">📋 BuildChangeOrder</a><div class="navbar-links" id="siteNav"><a href="/about.html">About</a></div><button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+  </nav>
   <main style="max-width:720px;margin:3rem auto;padding:0 1.5rem;">
     <h1 style="font-size:1.8rem;font-weight:800;color:var(--text-primary);margin-bottom:1rem;">Privacy Policy</h1>
     <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1.5rem;">Last updated: April 18, 2026</p>
@@ -15,5 +16,33 @@
     <p style="color:var(--text-secondary);">Contact: <a href="mailto:buildpdf.help@gmail.com" style="color:var(--accent);">buildpdf.help@gmail.com</a></p>
   </main>
   <footer class="site-footer"><p>© 2026 BuildChangeOrder</p></footer>
+<script>
+    const navToggle = document.getElementById('navToggle');
+    const siteNav = document.getElementById('siteNav');
+    const headerInner = navToggle ? navToggle.closest('.navbar') : null;
+    function closeNav() {
+      siteNav.classList.remove('open'); navToggle.classList.remove('open');
+      document.body.style.overflow = '';
+      const btn = siteNav.querySelector('.nav-close'); if (btn) btn.remove();
+      setTimeout(() => headerInner.appendChild(siteNav), 300);
+    }
+    if (navToggle && siteNav && headerInner) {
+      navToggle.addEventListener('click', () => {
+        const isOpen = siteNav.classList.contains('open');
+        if (!isOpen) {
+          document.body.appendChild(siteNav);
+          const closeBtn = document.createElement('button');
+          closeBtn.className = 'nav-close';
+          closeBtn.setAttribute('aria-label', 'Close menu');
+          closeBtn.innerHTML = '&#x2715;';
+          closeBtn.addEventListener('click', closeNav);
+          siteNav.prepend(closeBtn);
+          requestAnimationFrame(() => { siteNav.classList.add('open'); navToggle.classList.add('open'); });
+          document.body.style.overflow = 'hidden';
+        } else { closeNav(); }
+      });
+      siteNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+    }
+  </script>
 </body>
 </html>

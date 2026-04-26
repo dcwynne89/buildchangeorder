@@ -80,10 +80,11 @@
 
   <nav class="navbar">
     <a href="/" class="navbar-brand">📋 BuildChangeOrder</a>
-    <div class="navbar-links">
+    <div class="navbar-links" id="siteNav">
       <a href="/api/docs" style="color:var(--accent);">API Docs</a>
       <a href="/about.html">About</a>
     </div>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
   </nav>
 
   <div style="max-width:1100px;margin:0 auto;padding:1.5rem 1.5rem 0;">
@@ -541,6 +542,34 @@ print(f"New contract total: ${data['totals']['new_contract_total']}")</code></pr
       event.target.classList.add('active');
       document.querySelectorAll(`[id^="${groupId}-"]`).forEach(p => p.classList.remove('active'));
       document.getElementById(`${groupId}-${tabId}`).classList.add('active');
+    }
+  </script>
+<script>
+    const navToggle = document.getElementById('navToggle');
+    const siteNav = document.getElementById('siteNav');
+    const headerInner = navToggle ? navToggle.closest('.navbar') : null;
+    function closeNav() {
+      siteNav.classList.remove('open'); navToggle.classList.remove('open');
+      document.body.style.overflow = '';
+      const btn = siteNav.querySelector('.nav-close'); if (btn) btn.remove();
+      setTimeout(() => headerInner.appendChild(siteNav), 300);
+    }
+    if (navToggle && siteNav && headerInner) {
+      navToggle.addEventListener('click', () => {
+        const isOpen = siteNav.classList.contains('open');
+        if (!isOpen) {
+          document.body.appendChild(siteNav);
+          const closeBtn = document.createElement('button');
+          closeBtn.className = 'nav-close';
+          closeBtn.setAttribute('aria-label', 'Close menu');
+          closeBtn.innerHTML = '&#x2715;';
+          closeBtn.addEventListener('click', closeNav);
+          siteNav.prepend(closeBtn);
+          requestAnimationFrame(() => { siteNav.classList.add('open'); navToggle.classList.add('open'); });
+          document.body.style.overflow = 'hidden';
+        } else { closeNav(); }
+      });
+      siteNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
     }
   </script>
 </body>
