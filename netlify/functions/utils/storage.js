@@ -5,6 +5,7 @@
    ============================================================ */
 
 const { getStore } = require("@netlify/blobs");
+const crypto = require("crypto");
 
 const MAX_BODY_BYTES = 512 * 1024; // 512 KB
 
@@ -16,7 +17,13 @@ function store(name) {
   return getStore(name);
 }
 
-function simpleHash(str) {
+// Secure SHA-256 hash
+function hashKey(str) {
+  return crypto.createHash("sha256").update(str).digest("hex");
+}
+
+// Legacy hash — kept ONLY for migration lookups
+function legacySimpleHash(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) {
     h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
@@ -25,15 +32,12 @@ function simpleHash(str) {
 }
 
 function generateKey() {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let key = "bco_";
-  for (let i = 0; i < 32; i++) key += chars[Math.floor(Math.random() * chars.length)];
-  return key;
+  return "bco_" + crypto.randomBytes(24).toString("base64url");
 }
 
 async function registerKey(email) {
   const apiKey   = generateKey();
-  const hash     = simpleHash(apiKey);
+  const hash     = hashKey(apiKey);
   const keyStore = store("bco-keys");
 
   await keyStore.setJSON(hash, {
@@ -44,23 +48,44 @@ async function registerKey(email) {
   });
 
   const emailStore = store("bco-emails");
-  await emailStore.setJSON(simpleHash(email), { hash, created_at: new Date().toISOString() });
+  const emailHash  = hashKey(email);
+  await emailStore.setJSON(emailHash, { hash, created_at: new Date().toISOString() });
+
+  // Also store under legacy email hash for backward compat during transition
+  const legacyEmailHash = legacySimpleHash(email);
+  if (legacyEmailHash !== emailHash) {
+    await emailStore.setJSON(legacyEmailHash, { hash, created_at: new Date().toISOString() });
+  }
 
   return { apiKey };
 }
 
 async function emailHasKey(email) {
   const emailStore = store("bco-emails");
-  const record = await emailStore.get(simpleHash(email), { type: "json" }).catch(() => null);
+
+  // Try SHA-256 hash first
+  let record = await emailStore.get(hashKey(email), { type: "json" }).catch(() => null);
+  if (record) return true;
+
+  // Fall back to legacy hash
+  record = await emailStore.get(legacySimpleHash(email), { type: "json" }).catch(() => null);
   return !!record;
 }
 
 async function checkRegistrationLimit(ip) {
   const limStore = store("bco-reg-limits");
-  const key      = `ip_${simpleHash(ip)}`;
-  const record   = await limStore.get(key, { type: "json" }).catch(() => null);
-  const now      = Date.now();
-  const hour     = 3600 * 1000;
+  const key      = `ip_${hashKey(ip)}`;
+
+  // Also check legacy key for existing rate limit records
+  const legacyKey = `ip_${legacySimpleHash(ip)}`;
+
+  let record = await limStore.get(key, { type: "json" }).catch(() => null);
+  if (!record) {
+    record = await limStore.get(legacyKey, { type: "json" }).catch(() => null);
+  }
+
+  const now  = Date.now();
+  const hour = 3600 * 1000;
 
   if (!record) return { allowed: true };
   if (now - record.firstAttempt > hour) return { allowed: true };
@@ -70,7 +95,7 @@ async function checkRegistrationLimit(ip) {
 
 async function recordRegistrationAttempt(ip) {
   const limStore = store("bco-reg-limits");
-  const key      = `ip_${simpleHash(ip)}`;
+  const key      = `ip_${hashKey(ip)}`;
   const record   = await limStore.get(key, { type: "json" }).catch(() => null);
   const now      = Date.now();
 
